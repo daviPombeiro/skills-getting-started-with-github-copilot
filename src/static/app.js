@@ -20,17 +20,42 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const spotsLeft = details.max_participants - details.participants.length;
 
-        // Create participants list HTML
-        const participantsList = details.participants.length > 0
-          ? `<ul class="participants-list">
-              ${details.participants.map(email => `
-                <li>
-                  <span>${email}</span>
-                  <span class="delete-icon" data-activity="${name}" data-email="${email}" title="Remove participant">🗑️</span>
-                </li>
-              `).join('')}
-            </ul>`
-          : `<p class="no-participants">No participants yet. Be the first to sign up!</p>`;
+        // Create participants section
+        const participantsSection = document.createElement('div');
+        
+        if (details.participants.length > 0) {
+          const ul = document.createElement('ul');
+          ul.className = 'participants-list';
+          
+          details.participants.forEach(email => {
+            const li = document.createElement('li');
+            
+            const emailSpan = document.createElement('span');
+            emailSpan.textContent = email;
+            
+            const deleteButton = document.createElement('button');
+            deleteButton.className = 'delete-icon';
+            deleteButton.setAttribute('data-activity', name);
+            deleteButton.setAttribute('data-email', email);
+            deleteButton.setAttribute('aria-label', 'Remove participant');
+            deleteButton.setAttribute('title', 'Remove participant');
+            deleteButton.setAttribute('type', 'button');
+            deleteButton.textContent = '🗑️';
+            
+            li.appendChild(emailSpan);
+            li.appendChild(deleteButton);
+            ul.appendChild(li);
+          });
+          
+          participantsSection.appendChild(ul);
+        } else {
+          const p = document.createElement('p');
+          p.className = 'no-participants';
+          p.textContent = 'No participants yet. Be the first to sign up!';
+          participantsSection.appendChild(p);
+        }
+        
+        const participantsList = participantsSection.innerHTML;
 
         activityCard.innerHTML = `
           <h4>${name}</h4>

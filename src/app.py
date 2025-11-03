@@ -102,7 +102,7 @@ def signup_for_activity(activity_name: str, email: str):
     activity = activities[activity_name]
 
     # Validate student is not already signed up
-    if email in activity["participants"]:
+    if email in set(activity["participants"]):
         raise HTTPException(status_code=400, detail="Student already signed up for this activity")
     
     # Add student
@@ -121,7 +121,7 @@ def unregister_from_activity(activity_name: str, email: str):
     activity = activities[activity_name]
 
     # Validate student is signed up
-    if email not in activity["participants"]:
+    if email not in set(activity["participants"]):
         raise HTTPException(status_code=400, detail="Student is not signed up for this activity")
     
     # Remove student
